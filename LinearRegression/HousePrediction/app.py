@@ -1,4 +1,4 @@
-import streamlit as st
+import streamlit as st # type: ignore
 import pickle
 import numpy as np
 import pandas as pd
@@ -11,20 +11,18 @@ try:
 except Exception as e:
     print(f"Error loading model: {e}")
 
-
 # Define the Streamlit app
 st.title('California House Price Prediction')
 
-# Input features
+# Input features using sliders
 st.write('Enter the details for prediction:')
 
-# Example feature names based on common features for house price models
-median_income = st.number_input('Median Income (in $1000s)', format="%.2f")
-house_age = st.number_input('House Age (in years)', format="%.2f")
-num_bedrooms = st.number_input('Number of Bedrooms', format="%.2f")
-population = st.number_input('Population', format="%.2f")
-latitude = st.number_input('Latitude', format="%.6f")
-longitude = st.number_input('Longitude', format="%.6f")
+median_income = st.slider('Median Income (in $1000s)', min_value=0.0, max_value=15.0, step=0.1, value=5.0)
+house_age = st.slider('House Age (in years)', min_value=0, max_value=100, step=1, value=30)
+num_bedrooms = st.slider('Number of Bedrooms', min_value=1, max_value=10, step=1, value=3)
+population = st.slider('Population', min_value=0, max_value=50000, step=100, value=1000)
+latitude = st.slider('Latitude', min_value=32.0, max_value=42.0, step=0.001, value=37.0)
+longitude = st.slider('Longitude', min_value=-125.0, max_value=-114.0, step=0.001, value=-119.0)
 
 if st.button('Predict'):
     # Convert input features to a DataFrame
@@ -38,7 +36,6 @@ if st.button('Predict'):
     })
 
     # Ensure the order of features matches the model's training data
-    # Assuming the model was trained with features in the same order
     prediction = model.predict(input_df)
 
     st.write(f'Estimated House Price: ${prediction[0]:,.2f}')
